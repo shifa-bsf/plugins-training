@@ -5,7 +5,9 @@
   Description: A amazing plugin.
   Version: 1.0
   Author: Shifa
-  Author URI: 
+  Author URI: https://github.com/shifa-bsf
+  Text Domain: wcpdomain
+  Domain Path:/languages
 */
 class WordCountPlugin {
   function __construct(){
@@ -13,8 +15,13 @@ class WordCountPlugin {
     add_action('admin_menu', array($this,'settingsPage'));
     add_action('admin_init', array($this,'settings'));
     add_filter('the_content', array($this, 'ifWrap'));
+    add_filter('init', array($this, 'languages'));
   }
 
+  // 
+  function languages(){
+    load_plugin_textdomain('wcpdomain', false, dirname(plugin_basename(__FILE__)).'/languages');
+  }
   // Add plugin stylesheet
   function callback_for_setting_up_scripts() {
     wp_register_style( 'wcp_style', plugins_url( 'style.css', __FILE__ ) );
@@ -24,7 +31,7 @@ class WordCountPlugin {
 
   // creating custom option page under settings
   function settingsPage(){
-    add_options_page('Word count settings','Word count','manage_options','word-count-settings',array($this,'SettingsHTML'));
+    add_options_page('Word count settings',__('Word count','wcpdomain'),'manage_options','word-count-settings',array($this,'SettingsHTML'));
     // add_options_page( page_title, menu_title, capability, menu_slug, function with page html, position )
   }
 
@@ -115,7 +122,7 @@ class WordCountPlugin {
       $wordCount = str_word_count(strip_tags($content));
     }
     if (get_option('wcp_wordcount', '1')) {
-      $html .= '<li>This post has ' . $wordCount . ' words.</li>';
+      $html .= '<li>'.__('This post has','wcpdomain').' '. $wordCount .' '.__('words','wcpdomain').'.</li>';
     }
     if (get_option('wcp_charactercount', '1')) {
       $html .= '<li>This post has ' . strlen(strip_tags($content)) . ' characters.</li>';
