@@ -1,7 +1,20 @@
-node_modules
-upgrade
-themes
-upgrade-temp-backup
-plugins/advanced-custom-fields
-plugins/members
-uploads
+# .gitignore
+
+# Ignore node_modules directory
+node_modules/
+
+# Ignore upgrade directory
+upgrade/
+
+# Ignore themes directory
+themes/
+
+# Ignore upgrade-temp-backup directory
+upgrade-temp-backup/
+
+# Ignore ACF and Members plugins
+plugins/advanced-custom-fields/
+plugins/members/
+
+# Ignore uploads directory
+uploads/
