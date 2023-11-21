@@ -11,7 +11,10 @@ if( !defined('ABSPATH') ) exit;
 
 class wordFilterPlugin{
     function __construct(){
-    add_action('admin_menu', array($this,'Menu'));
+        add_action('admin_menu', array($this,'Menu'));
+        add_action('admin_init', array($this, 'ourSettings'));
+        if (get_option('plugin_words_to_filter'))
+            add_filter('the_content', array($this, 'filterLogic'));
     }
     // Custom menu for the plugin
     function Menu() {
@@ -25,10 +28,11 @@ class wordFilterPlugin{
     function mainPageAssets() {
         wp_enqueue_style('filterAdminCss', plugin_dir_url(__FILE__) . 'style.css');
     }
-    
+    // update option and print message
     function handleForm() {
         if (wp_verify_nonce($_POST['ourNonce'], 'saveFilterWords') AND current_user_can('manage_options')) {
-          update_option('plugin_words_to_filter', sanitize_text_field($_POST['plugin_words_to_filter'])); ?>
+          update_option('plugin_words_to_filter', sanitize_text_field($_POST['plugin_words_to_filter'])); 
+          ?>
           <div class="updated">
             <p>Your filtered words saved successfully.</p>
           </div>
@@ -45,6 +49,7 @@ class wordFilterPlugin{
           <?php if (isset($_POST['justsubmitted']) && $_POST['justsubmitted'] == "true") $this->handleForm() ?>
           <form method="POST">
             <input type="hidden" name="justsubmitted" value="true">
+            <!-- creating a hidden field with nonce --> 
             <?php wp_nonce_field('saveFilterWords', 'ourNonce') ?>
             <label for="plugin_words_to_filter"><p>Enter a <strong>comma-separated</strong> list of words to filter from your site's content.</p></label>
             <div class="word-filter__flex-container">
@@ -57,8 +62,41 @@ class wordFilterPlugin{
 
     //sub page - options
     function optionsSubPage() { ?>
-    Hello world from the options page.
-    <?php }
+    <div class="wrap">
+      <h1>Word Filter Options</h1>
+      <form action="options.php" method="POST">
+        <?php
+          settings_errors();
+          settings_fields('replacementFields');
+          do_settings_sections('word-filter-options');
+          submit_button();
+        ?>
+      </form>
+    </div>
+    <?php 
+    }
+
+    // settings
+    function ourSettings() {
+        add_settings_section('replacement-text-section', null, null, 'word-filter-options');
+        register_setting('replacementFields', 'replacementText');
+        add_settings_field('replacement-text', 'Filtered Text', array($this, 'replacementFieldHTML'), 'word-filter-options', 'replacement-text-section');
+    }
+
+    //Replacement field html
+    function replacementFieldHTML() { ?>
+        <input type="text" name="replacementText" value="<?php echo esc_attr(get_option('replacementText', '***')) ?>">
+        <p class="description">Leave blank to simply remove the filtered words.</p>
+    <?php
+    }
+
+    // Do filter logic
+    function filterLogic($content) {
+        $badWords = explode(',', get_option('plugin_words_to_filter'));
+        $badWordsTrimmed = array_map('trim', $badWords);
+        return str_ireplace($badWordsTrimmed, esc_html(get_option('replacementText', '****')), $content);
+    }
+
     
 }
 
