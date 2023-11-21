@@ -1,0 +1,12 @@
+.word-filter__flex-container {
+    display: flex;
+  }
+  
+  .word-filter__flex-container textarea {
+    flex: 1;
+    height: 200px;
+    margin-bottom: 20px;
+    background-color: beige;
+    font-size: 20px;
+  }
+  
