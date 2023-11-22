@@ -1,0 +1,16 @@
+{
+  "name": "are-you-paying-attention",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "wp-scripts build src/index.js src/frontend.js",
+    "start": "wp-scripts start src/index.js src/frontend.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "shifa",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@wordpress/scripts": "^26.17.0"
+  }
+}

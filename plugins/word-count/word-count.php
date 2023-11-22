@@ -24,7 +24,7 @@ class WordCountPlugin {
   }
   // Add plugin stylesheet
   function callback_for_setting_up_scripts() {
-    wp_register_style( 'wcp_style', plugins_url( 'style.css', __FILE__ ) );
+    wp_register_style( 'wcp_style', plugins_url( 'style.css', __FILE__ ), array(), "1.0.0" );
     wp_enqueue_style( 'wcp_style' );
   }
 
@@ -87,7 +87,7 @@ class WordCountPlugin {
 
   //Headline field
   function headlineHTML() { ?>
-    <input type="text" name="wcp_headline" value="<?php echo esc_attr(get_option('wcp_headline')) ?>">
+    <input type="text" name="wcp_headline" value="<?php echo esc_attr(get_option('wcp_headline')) ?>" required>
   <?php }
 
   //Location field
