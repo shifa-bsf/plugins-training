@@ -1,5 +1,5 @@
 <?php
-function generateProfessorHTML($id) {
+function fp_generate_professor_html($id) {
   $profPost = get_post($id);
 
   if ($profPost) {
