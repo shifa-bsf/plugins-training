@@ -102,6 +102,7 @@ class WordCountPlugin {
   function ifWrap($content){
     if( is_main_query() AND 
         is_single() AND 
+        get_post_type() === 'post' AND
         (
           get_option('wcp_wordcount', '1') OR
           get_option('wcp_charactercount', '1') OR
@@ -133,10 +134,10 @@ class WordCountPlugin {
     $html .= '</ul></div>';
 
     if(get_option('wcp_location','0')=='0'){
-      return $content.$html;
+      return $html.$content;
     }
     else{
-      return $html.$content;
+      return $content.$html;
     }
   }
 
