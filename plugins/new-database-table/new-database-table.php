@@ -8,21 +8,21 @@
 */
 
 if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-require_once plugin_dir_path(__FILE__) . 'inc/generatePet.php';
+require_once plugin_dir_path(__FILE__) . 'inc/generate-pet.php';
 
-class PetAdoptionTablePlugin {
+class Pet_adoption_table_plugin {
   function __construct() {
     global $wpdb;
     $this->charset = $wpdb->get_charset_collate();
     $this->tablename = $wpdb->prefix . "pets";
-    add_action('activate_new-database-table/new-database-table.php', array($this, 'onActivate'));
-    // add_action('admin_head', array($this, 'populateFast'));
-    add_action('wp_enqueue_scripts', array($this, 'loadAssets'));
-    add_filter('template_include', array($this, 'loadTemplate'), 99);
+    add_action('activate-new-database-table/new-database-table.php', array($this, 'on_activate'));
+    // add_action('admin_head', array($this, 'populate_fast'));
+    add_action('wp_enqueue_scripts', array($this, 'load_assets'));
+    add_filter('template_include', array($this, 'load_template'), 99);
   }
 
   //creating custom table
-  function onActivate() {
+  function on_activate() {
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta("CREATE TABLE $this->tablename (
       id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -37,19 +37,19 @@ class PetAdoptionTablePlugin {
     ) $this->charset;"); 
   }
 
-  function onAdminRefresh() {
+  function on_admin_refresh() {
     global $wpdb;
     // insert data to table (here adding just one data)
-    $wpdb->insert($this->tablename, generatePet());
+    $wpdb->insert($this->tablename, generate_pet());
   }
 
-  function loadAssets() {
+  function load_assets() {
     if (is_page('pet-adoption')) {
       wp_enqueue_style('petadoptioncss', plugin_dir_url(__FILE__) . 'pet-adoption.css');
     }
   }
 
-  function loadTemplate($template) {
+  function load_template($template) {
     if (is_page('pet-adoption')) {
       return plugin_dir_path(__FILE__) . 'inc/template-pets.php';
     }
@@ -57,11 +57,11 @@ class PetAdoptionTablePlugin {
   }
 
   //inserting multiple data to table once
-  function populateFast() {
+  function populate_fast() {
     $query = "INSERT INTO $this->tablename (`species`, `birthyear`, `petweight`, `favfood`, `favhobby`, `favcolor`, `petname`) VALUES ";
     $numberofpets = 20;
     for ($i = 0; $i < $numberofpets; $i++) {
-      $pet = generatePet();
+      $pet = generate_pet();
       $query .= "('{$pet['species']}', {$pet['birthyear']}, {$pet['petweight']}, '{$pet['favfood']}', '{$pet['favhobby']}', '{$pet['favcolor']}', '{$pet['petname']}')";
       if ($i != $numberofpets - 1) {
         $query .= ", ";
@@ -80,4 +80,4 @@ class PetAdoptionTablePlugin {
 
 }
 
-$petAdoptionTablePlugin = new PetAdoptionTablePlugin();
+$pet_adoption_table_plugin = new Pet_adoption_table_plugin();

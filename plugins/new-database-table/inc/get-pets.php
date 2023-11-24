@@ -1,24 +1,25 @@
 <?php 
 
-class GetPets {
+class get_pets {
   function __construct() {
     global $wpdb;
     $tablename = $wpdb->prefix . 'pets';
 
-    $this->args = $this->getArgs();
-    $this->placeholders = $this->createPlaceholders();
+    $this->args = $this->get_args();
+    // $this->placeholders = $this->create_placeholders();
 
     $query = "SELECT * FROM $tablename ";
     $countQuery = "SELECT COUNT(*) FROM $tablename ";
-    $query .= $this->createWhereText();
-    $countQuery .= $this->createWhereText();
+    
+    $query .= $this->create_where_text();
+    $countQuery .= $this->create_where_text();
     $query .= " LIMIT 100";
 
-    $this->count = $wpdb->get_var($wpdb->prepare($countQuery, $this->placeholders));
-    $this->pets = $wpdb->get_results($wpdb->prepare($query, $this->placeholders));
+    $this->count = $wpdb->get_var($wpdb->prepare($countQuery, $this->args));
+    $this->pets = $wpdb->get_results($wpdb->prepare($query, $this->args));
   }
 
-  function getArgs() {
+  function get_args() {
     $temp = array(
         'favcolor' => isset($_GET['favcolor']) ? sanitize_text_field($_GET['favcolor']) : null,
         'species' => isset($_GET['species']) ? sanitize_text_field($_GET['species']) : null,
@@ -30,19 +31,19 @@ class GetPets {
         'favfood' => isset($_GET['favfood']) ? sanitize_text_field($_GET['favfood']) : null,
     );
 
-    return array_filter($temp, function($x) {
-      return $x;
+    return array_filter($temp, function($value) {
+      return $value;
     });
 
   }
 
-  function createPlaceholders() {
-    return array_map(function($x) {
-      return $x;
-    }, $this->args);
-  }
+  // function create_placeholders() {
+  //   return array_map(function($value) {
+  //     return $value;
+  //   }, $this->args);
+  // }
 
-  function createWhereText() {
+  function create_where_text() {
     $whereQuery = "";
 
     if (count($this->args)) {
@@ -51,7 +52,7 @@ class GetPets {
 
     $currentPosition = 0;
     foreach($this->args as $index => $item) {
-      $whereQuery .= $this->specificQuery($index);
+      $whereQuery .= $this->specific_query($index);
       if ($currentPosition != count($this->args) - 1) {
         $whereQuery .= " AND ";
       }
@@ -61,7 +62,7 @@ class GetPets {
     return $whereQuery;
   }
 
-  function specificQuery($index) {
+  function specific_query($index) {
     switch ($index) {
       case "minweight":
         return "petweight >= %d";

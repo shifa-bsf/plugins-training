@@ -13,7 +13,7 @@ if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 require_once plugin_dir_path(__FILE__) . 'inc/generate-professor.php';
 require_once plugin_dir_path(__FILE__) . 'inc/related-posts.php';
 
-class FeaturedProfessor {
+class featured_professor {
   function __construct() {
     add_action('init', [$this, 'fp_register_block']);
     add_action('rest_api_init', [$this, 'fp_html']);
@@ -70,4 +70,4 @@ class FeaturedProfessor {
 
 }
 
-$featuredProfessor = new FeaturedProfessor();
+$featured_professor = new featured_professor();

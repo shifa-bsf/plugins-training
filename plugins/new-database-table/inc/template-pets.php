@@ -1,7 +1,7 @@
 <?php
 
-require_once plugin_dir_path(__FILE__) . 'GetPets.php';
-$getPets = new GetPets();
+require_once plugin_dir_path(__FILE__) . 'get-pets.php';
+$get_pets = new get_pets();
 
 get_header(); ?>
 
@@ -17,7 +17,7 @@ get_header(); ?>
 
 <div class="container container--narrow page-section">
 
-  <p>This page took <strong><?php echo timer_stop();?></strong> seconds to prepare. Found <strong><?php echo $getPets->count; ?></strong> results (showing the first <?php echo count($getPets->pets) ?>).</p>
+  <p>This page took <strong><?php echo timer_stop();?></strong> seconds to prepare. Found <strong><?php echo $get_pets->count; ?></strong> results (showing the first <?php echo count($get_pets->pets) ?>).</p>
   
   <table class="pet-adoption-table">
     <tr>
@@ -30,7 +30,7 @@ get_header(); ?>
       <th>Favorite Food</th>
     </tr>
     <?php
-      foreach($getPets->pets as $pet) { ?>
+      foreach($get_pets->pets as $pet) { ?>
         <tr>
           <td><?php echo $pet->petname; ?></td>
           <td><?php echo $pet->species; ?></td>
