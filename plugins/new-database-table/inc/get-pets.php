@@ -13,7 +13,7 @@ class get_pets {
     
     $query .= $this->create_where_text();
     $countQuery .= $this->create_where_text();
-    $query .= " LIMIT 100";
+    $query .= " order by 'id' LIMIT 100 ";
 
     $this->count = $wpdb->get_var($wpdb->prepare($countQuery, $this->args));
     $this->pets = $wpdb->get_results($wpdb->prepare($query, $this->args));

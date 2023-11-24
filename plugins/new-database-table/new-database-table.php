@@ -17,6 +17,10 @@ class Pet_adoption_table_plugin {
     $this->tablename = $wpdb->prefix . "pets";
     add_action('activate-new-database-table/new-database-table.php', array($this, 'on_activate'));
     // add_action('admin_head', array($this, 'populate_fast'));
+    add_action('admin_post_create_pet', array($this, 'create_pet'));
+    add_action('admin_post_nopriv_create_pet', array($this, 'create_pet'));
+    add_action('admin_post_delete_pet', array($this, 'delete_pet'));
+    add_action('admin_post_nopriv_delete_pet', array($this, 'delete_pet'));
     add_action('wp_enqueue_scripts', array($this, 'load_assets'));
     add_filter('template_include', array($this, 'load_template'), 99);
   }
@@ -45,7 +49,7 @@ class Pet_adoption_table_plugin {
 
   function load_assets() {
     if (is_page('pet-adoption')) {
-      wp_enqueue_style('petadoptioncss', plugin_dir_url(__FILE__) . 'pet-adoption.css');
+      wp_enqueue_style('petadoptioncss', plugin_dir_url(__FILE__) . 'pet-adoption.css',array(),"1.0.0");
     }
   }
 
@@ -59,7 +63,7 @@ class Pet_adoption_table_plugin {
   //inserting multiple data to table once
   function populate_fast() {
     $query = "INSERT INTO $this->tablename (`species`, `birthyear`, `petweight`, `favfood`, `favhobby`, `favcolor`, `petname`) VALUES ";
-    $numberofpets = 20;
+    $numberofpets = 50;
     for ($i = 0; $i < $numberofpets; $i++) {
       $pet = generate_pet();
       $query .= "('{$pet['species']}', {$pet['birthyear']}, {$pet['petweight']}, '{$pet['favfood']}', '{$pet['favhobby']}', '{$pet['favcolor']}', '{$pet['petname']}')";
@@ -76,6 +80,31 @@ class Pet_adoption_table_plugin {
     */
     global $wpdb;
     $wpdb->query($query);
+  }
+
+  // inserting new pet data to the table
+  function create_pet(){
+    if(current_user_can('administrator')){
+      $pet = generate_pet();
+      $pet['petname'] = sanitize_text_field($_POST['newpetname']);
+      global $wpdb;
+      $wpdb->insert($this->tablename, $pet);
+      wp_safe_redirect(site_url('/pet-adoption'));
+    }
+    else{
+      wp_redirect(site_url());
+    }
+  }
+  function delete_pet() {
+    if (current_user_can('administrator')) {
+      $id = sanitize_text_field($_POST['idtodelete']);
+      global $wpdb;
+      $wpdb->delete($this->tablename, array('id' => $id));
+      wp_safe_redirect(site_url('/pet-adoption'));
+    } else {
+      wp_safe_redirect(site_url());
+    }
+    exit;
   }
 
 }

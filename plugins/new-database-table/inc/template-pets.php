@@ -17,7 +17,11 @@ get_header(); ?>
 
 <div class="container container--narrow page-section">
 
-  <p>This page took <strong><?php echo timer_stop();?></strong> seconds to prepare. Found <strong><?php echo $get_pets->count; ?></strong> results (showing the first <?php echo count($get_pets->pets) ?>).</p>
+  <p>
+    This page took <strong><?php echo timer_stop();?></strong> seconds to prepare. 
+    Found <strong><?php echo $get_pets->count; ?></strong> results 
+    (showing the first <?php echo count($get_pets->pets) ?>).
+  </p>
   
   <table class="pet-adoption-table">
     <tr>
@@ -39,11 +43,32 @@ get_header(); ?>
           <td><?php echo $pet->favhobby; ?></td>
           <td><?php echo $pet->favcolor; ?></td>
           <td><?php echo $pet->favfood; ?></td>
+          <?php if (current_user_can('administrator')) { ?>
+            <td style="text-align: center;">
+            <form action="<?php echo esc_url(admin_url('admin-post.php')) ?>" method="POST">
+              <input type="hidden" name="action" value="delete_pet">
+              <input type="hidden" name="idtodelete" value="<?php echo $pet->id; ?>">
+              <button class="delete-pet-button">X</button>
+            </form>
+          </td>
+          <?php } ?>
         </tr>
       <?php }
     ?>
   </table>
   
+  <?php 
+    //checking the capability of current user
+    if (current_user_can('administrator')) { ?>
+      <!-- On form submit it creates a new hook named admin_post_create_pet -->
+      <form action="<?php echo esc_url(admin_url('admin-post.php')) ?>" class="create-pet-form" method="POST">
+        <p>Enter just the name for a new pet. Its species, weight, and other details will be randomly generated.</p>
+        <input type="hidden" name="action" value="create_pet">
+        <input type="text" name="newpetname" placeholder="name...">
+        <button>Add Pet</button>
+      </form>
+    <?php }
+  ?>
 </div>
 
 <?php get_footer(); ?>
