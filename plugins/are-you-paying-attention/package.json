@@ -5,15 +5,27 @@
   "scripts": {
     "build": "wp-scripts build src/index.js src/frontend.js",
     "start": "wp-scripts start src/index.js src/frontend.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "wp-scripts format"
   },
   "author": "shifa",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@wordpress/scripts": "^26.17.0"
+    "@babel/core": "^7.23.3",
+    "@babel/preset-react": "^7.23.3",
+    "@wordpress/scripts": "^26.17.0",
+    "grunt": "^1.6.1",
+    "grunt-babel": "^8.0.0",
+    "grunt-cli": "^1.4.3",
+    "grunt-contrib-clean": "^2.0.1",
+    "grunt-contrib-compress": "^2.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "^5.0.0",
+    "grunt-contrib-sass": "^2.0.0",
+    "grunt-contrib-uglify": "^5.2.2"
   },
   "dependencies": {
+    "composer": "^4.1.0",
     "react-color": "^2.19.3"
   }
 }
